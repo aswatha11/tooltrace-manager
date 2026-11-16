@@ -14,8 +14,8 @@ import { formatDuration, hoursBetween, isDelayed, nextStage, parseScannedCode, t
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/update")({
-  validateSearch: (s: Record<string, unknown>): { code?: string } => ({
-    code: typeof s.code === "string" && s.code ? s.code.toUpperCase() : undefined,
+  validateSearch: (s: Record<string, unknown>): { code?: string | undefined } => ({
+    code: typeof s["code"] === "string" && s["code"] ? s["code"].toUpperCase() : undefined,
   }),
   head: () => ({
     meta: [
@@ -240,7 +240,7 @@ function UpdateStatus() {
         className="relative mt-4"
         onSubmit={(e) => {
           e.preventDefault();
-          if (matches.length === 1) select(matches[0].tool_code);
+          if (matches.length === 1 && matches[0]) select(matches[0].tool_code);
           else if (q.trim()) select(parseScannedCode(q));
         }}
       >

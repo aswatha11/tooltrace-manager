@@ -65,7 +65,10 @@ function ToolDetail() {
 
   const remove = async () => {
     const { error } = await supabase.from("tools").delete().eq("id", tool.id);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     toast.success(`${tool.tool_code} deleted`);
     qc.invalidateQueries({ queryKey: ["tools"] });
     navigate({ to: "/tools" });
@@ -159,7 +162,7 @@ function ToolDetail() {
         <ol className="relative mt-6 ml-3 border-l-2 border-border">
           {timeline.map((e, idx) => {
             const st = e.stage_id ? stageMap.get(e.stage_id) : undefined;
-            const nextAt = idx === 0 ? now.toISOString() : timeline[idx - 1].created_at;
+            const nextAt = idx === 0 ? now.toISOString() : (timeline[idx - 1]?.created_at ?? now.toISOString());
             const spent = (new Date(nextAt).getTime() - new Date(e.created_at).getTime()) / 36e5;
             return (
               <li key={e.id} className={cn(toneClass(st?.index), "relative pb-8 pl-8 last:pb-0")}>

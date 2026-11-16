@@ -56,11 +56,11 @@ export const toolEventsQuery = (toolId: string | undefined) =>
   });
 
 export type ReportFilters = {
-  tool?: string;
-  stage?: string;
-  operator?: string;
-  from?: string;
-  to?: string;
+  tool?: string | undefined;
+  stage?: string | undefined;
+  operator?: string | undefined;
+  from?: string | undefined;
+  to?: string | undefined;
 };
 
 export type ReportRow = ToolEvent & { tools: { tool_code: string; name: string } | null };

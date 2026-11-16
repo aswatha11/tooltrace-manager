@@ -71,7 +71,10 @@ function StagesManager() {
     const { error } = await supabase
       .from("stages")
       .insert({ name: name.trim(), position, max_hours: hours ? Number(hours) : null });
-    if (error) return toast.error(error.message.includes("duplicate") ? "A stage with that name already exists" : error.message);
+    if (error) {
+      toast.error(error.message.includes("duplicate") ? "A stage with that name already exists" : error.message);
+      return;
+    }
     setName("");
     toast.success("Stage added");
     refresh();
@@ -90,7 +93,10 @@ function StagesManager() {
 
   const remove = async (s: Stage) => {
     const { error } = await supabase.from("stages").delete().eq("id", s.id);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     toast.success(`Deleted “${s.name}”`);
     refresh();
   };
@@ -231,7 +237,10 @@ function UsersManager() {
     const add = admin ? "admin" : "operator";
     const drop = admin ? "operator" : "admin";
     const { error } = await supabase.from("user_roles").insert({ user_id: userId, role: add });
-    if (error && !error.message.includes("duplicate")) return toast.error(error.message);
+    if (error && !error.message.includes("duplicate")) {
+      toast.error(error.message);
+      return;
+    }
     await supabase.from("user_roles").delete().eq("user_id", userId).eq("role", drop);
     toast.success("Role updated");
     qc.invalidateQueries({ queryKey: ["users"] });
